@@ -137,7 +137,7 @@ def predict():
         label_dict = {'0':'buy','1':'communicate','2':'fun','3':'hope','4':'mother','5':'really'}
 
         return {"1": label_dict[str(model1_pred)], "2": label_dict[str(model2_pred)], 
-                "3": label_dict[str(model4_pred)], label_dict["4": str(model5_pred)]}
+                "3": label_dict[str(model4_pred)], "4": label_dict[str(model5_pred)]}
 
     # with open(os.path.join('data','json','buy','BUY_1_BAKRE.json')) as file:
     #     json_data = json.load(file)
