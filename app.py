@@ -133,9 +133,11 @@ def predict():
         with graph.as_default():
             model5_pred = model_5.predict_classes(data_2dfeatures)[0]
         tf.keras.backend.clear_session()
+        
+        label_dict = {'0':'buy','1':'communicate','2':'fun','3':'hope','4':'mother','5':'really'}
 
-        return {"1": str(model1_pred), "2": str(model2_pred), "3": str(model4_pred),
-                "4": str(model5_pred)}
+        return {"1": label_dict[str(model1_pred)], "2": label_dict[str(model2_pred)], 
+                "3": label_dict[str(model4_pred)], label_dict["4": str(model5_pred)]}
 
     # with open(os.path.join('data','json','buy','BUY_1_BAKRE.json')) as file:
     #     json_data = json.load(file)
