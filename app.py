@@ -55,15 +55,15 @@ def predict():
         return df
 
     def normalize_sample(X):
-        x_num = X[:, 0]
-        y_num = X[:, 1]
+        x_num = X[:, 0].copy()
+        y_num = X[:, 1].copy()
 
         total_cols = X.shape[-1]
         for col in range(0, total_cols, 2):
-            X[:, col] = (X[:, col] - x_num)
+            X[:, col] = X[:, col] - x_num
 
         for col in range(1, total_cols, 2):
-            X[:, col] = (X[:, col] - y_num)
+            X[:, col] = X[:, col] - y_num
 
         return X[:, 2:]
 
@@ -158,7 +158,7 @@ if __name__ == '__main__':
     model_4 = pickle.load(open(os.path.join("IPD", "KNN_model.pkl"), 'rb'))
 
     model_5 = Sequential()
-    model_5.add(Conv2D(6, kernel_size=(5, 5),
+    model_5.add(Conv2D(6, kernel_size=(5, 5),       
                       activation='tanh',
                       input_shape=[250, 12, 1]))
     model_5.add(Conv2D(12, (3, 3), activation='tanh'))
