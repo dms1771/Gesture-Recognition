@@ -105,7 +105,7 @@ def predict():
         # Equalize the timeframes
         diff = max_timeframes - data.shape[0]
         if (diff > 0):
-            data = extend_data(data, diff, kind='zeros')
+            data = extend_data(data, diff, kind='means')
         else:
             data = data[:max_timeframes, :]
 
@@ -126,18 +126,17 @@ def predict():
 
         model1_pred = model_1.predict(data_1dfeatures)[0]
         model2_pred = model_2.predict(data_1dfeatures)[0]
-        # model3_pred = model_3.predict(data_1dfeatures)[0]
-        model4_pred = model_4.predict(data_1dfeatures)[0]
+        model3_pred = model_4.predict(data_1dfeatures)[0]
 
         global graph
         with graph.as_default():
-            model5_pred = model_5.predict_classes(data_2dfeatures)[0]
+            model4_pred = model_4.predict_classes(data_2dfeatures)[0]
         tf.keras.backend.clear_session()
         
         label_dict = {'0':'buy','1':'communicate','2':'fun','3':'hope','4':'mother','5':'really'}
 
         return {"1": label_dict[str(model1_pred)], "2": label_dict[str(model2_pred)], 
-                "3": label_dict[str(model4_pred)], "4": label_dict[str(model5_pred)]}
+                "3": label_dict[str(model3_pred)], "4": label_dict[str(model4_pred)]}
 
     # with open(os.path.join('data','json','buy','BUY_1_BAKRE.json')) as file:
     #     json_data = json.load(file)
@@ -152,26 +151,25 @@ def predict():
 
 if __name__ == '__main__':
     # Loading trained models
-    model_1 = pickle.load(open(os.path.join("IPD", "SVM-OVO_model.pkl"), 'rb'))
-    model_2 = pickle.load(open(os.path.join("IPD", "RandomForest_model.pkl"), 'rb'))
-    model_3 = pickle.load(open(os.path.join("IPD", "XGBoost_model.pkl"), 'rb'))
-    model_4 = pickle.load(open(os.path.join("IPD", "KNN_model.pkl"), 'rb'))
+    model_1 = pickle.load(open(os.path.join("models", "SVM_model.pkl"), 'rb'))
+    model_2 = pickle.load(open(os.path.join("models", "RandomForest_model.pkl"), 'rb'))
+    model_3 = pickle.load(open(os.path.join("models", "KNN_model.pkl"), 'rb'))
 
-    model_5 = Sequential()
-    model_5.add(Conv2D(6, kernel_size=(5, 5),       
-                      activation='tanh',
-                      input_shape=[250, 12, 1]))
-    model_5.add(Conv2D(12, (3, 3), activation='tanh'))
-    model_5.add(MaxPooling2D(pool_size=(2, 2)))
-    model_5.add(Dropout(0.2))
-    model_5.add(Flatten())
-    model_5.add(Dense(12, activation='relu'))
-    model_5.add(Dropout(0.2))
-    model_5.add(Dense(6, activation='softmax'))
+    model_4 = Sequential()
+    model_4.add(Conv2D(6, kernel_size=(5, 5),activation='tanh',
+                 input_shape=(250,12,1))
+    model_4.add(MaxPooling2D(pool_size=(2, 1)))
+    model_4.add(Conv2D(12, (3, 3), activation='tanh'))
+    model_4.add(MaxPooling2D(pool_size=(2, 1)))
+    model_4.add(Dropout(0.25))
+    model_4.add(Flatten())
+    model_4.add(Dense(12, activation='tanh'))
+    model_4.add(Dropout(0.25))
+    model_4.add(Dense(6, activation='softmax'))
 
-    weights = pickle.load(open(os.path.join("IPD", "CNN_model.pkl"), "rb"))
-    model_5.set_weights(weights)
-    model_5.compile(loss=keras.losses.categorical_crossentropy,
+    weights = pickle.load(open(os.path.join("models", "CNN_model.pkl"), "rb"))
+    model_4.set_weights(weights)
+    model_4.compile(loss=keras.losses.categorical_crossentropy,
                    optimizer=keras.optimizers.Adadelta(),
                    metrics=['accuracy'])
 
