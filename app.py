@@ -157,7 +157,7 @@ if __name__ == '__main__':
 
     model_4 = Sequential()
     model_4.add(Conv2D(6, kernel_size=(5, 5),activation='tanh',
-                 input_shape=(250,12,1))
+                 input_shape=(250,12,1)))
     model_4.add(MaxPooling2D(pool_size=(2, 1)))
     model_4.add(Conv2D(12, (3, 3), activation='tanh'))
     model_4.add(MaxPooling2D(pool_size=(2, 1)))
